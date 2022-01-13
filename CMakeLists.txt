@@ -1,0 +1,21 @@
+cmake_minimum_required ( VERSION 2.8.5 )
+cmake_policy (SET CMP0048 NEW)
+project ( wasm-module-combiner )
+
+include(FetchContent)
+set(FETCHCONTENT_QUIET OFF)
+FetchContent_Declare(
+  wabt
+  GIT_REPOSITORY https://github.com/WebAssembly/wabt
+  GIT_TAG        main
+  )
+set(BUILD_TESTS off)
+set(BUILD_LIBWASM off)
+FetchContent_MakeAvailable(wabt)
+
+include_directories (SYSTEM "${CMAKE_BINARY_DIR}/_deps/wabt-src")
+include_directories (SYSTEM "${CMAKE_BINARY_DIR}/_deps/wabt-build")
+
+include_directories ("${PROJECT_SOURCE_DIR}/src/module-combiner")
+
+add_subdirectory ("${PROJECT_SOURCE_DIR}/src/module-combiner")
