@@ -17,5 +17,7 @@ include_directories (SYSTEM "${CMAKE_BINARY_DIR}/_deps/wabt-src")
 include_directories (SYSTEM "${CMAKE_BINARY_DIR}/_deps/wabt-build")
 
 include_directories ("${PROJECT_SOURCE_DIR}/src/module-combiner")
-
 add_subdirectory ("${PROJECT_SOURCE_DIR}/src/module-combiner")
+
+include_directories ("${PROJECT_SOURCE_DIR}/src/access-checker")
+add_subdirectory ("${PROJECT_SOURCE_DIR}/src/access-checker")
