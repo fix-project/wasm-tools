@@ -21,3 +21,6 @@ add_subdirectory ("${PROJECT_SOURCE_DIR}/src/module-combiner")
 
 include_directories ("${PROJECT_SOURCE_DIR}/src/access-checker")
 add_subdirectory ("${PROJECT_SOURCE_DIR}/src/access-checker")
+
+include_directories ("${PROJECT_SOURCE_DIR}/src/export-audit")
+add_subdirectory ("${PROJECT_SOURCE_DIR}/src/export-audit")
