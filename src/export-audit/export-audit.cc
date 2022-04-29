@@ -19,6 +19,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
+#include <unordered_set>
 
 #include "src/apply-names.h"
 #include "src/binary-reader-ir.h"
@@ -46,6 +47,7 @@ static bool s_fail_on_custom_section_error = true;
 static std::unique_ptr<FileStream> s_log_stream;
 static bool s_validate = true;
 static WriteBinaryOptions s_write_binary_options;
+static std::unordered_set<std::string> s_allowed_exports;
 
 static const char s_description[] = "XXX TBD";
 
@@ -58,6 +60,13 @@ static void ParseOptions( int argc, char** argv )
     s_log_stream = FileStream::CreateStderr();
   } );
   s_features.AddOptions( &parser );
+
+  parser.AddOption( 'e',
+                    "export",
+                    "allowed export name",
+                    "Name of an export that will be retained in the output file",
+                    []( const char* argument ) { s_allowed_exports.insert( argument ); } );
+
   parser.AddOption(
     "no-debug-names", "Ignore debug names in the binary file", []() { s_read_debug_names = false; } );
   parser.AddOption( "no-resolve-names", "Do not resolve names to index", []() { s_resolve_names = false; } );
@@ -102,6 +111,20 @@ int ProgramMain( int argc, char** argv )
       if ( s_validate ) {
         ValidateOptions options( s_features );
         result = ValidateModule( &module, &errors, options );
+      }
+
+      for ( auto it = module.exports.begin(); it != module.exports.end(); ) {
+        std::cerr << "found export \"" << ( *it )->name << "\" ";
+
+        const auto& name = ( *it )->name;
+
+        if ( s_allowed_exports.count( name ) ) {
+          std::cerr << "\n";
+          ++it;
+        } else {
+          std::cerr << "(suppressing)\n";
+          it = module.exports.erase( it );
+        }
       }
 
       MemoryStream memory_stream;
