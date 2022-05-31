@@ -48,6 +48,7 @@ static std::unique_ptr<FileStream> s_log_stream;
 static bool s_validate = true;
 static WriteBinaryOptions s_write_binary_options;
 static std::unordered_set<std::string> s_allowed_exports;
+static std::unordered_set<std::string> s_not_allowed_exports;
 
 static const char s_description[] = "XXX TBD";
 
@@ -66,6 +67,12 @@ static void ParseOptions( int argc, char** argv )
                     "allowed export name",
                     "Name of an export that will be retained in the output file",
                     []( const char* argument ) { s_allowed_exports.insert( argument ); } );
+
+  parser.AddOption( 'r',
+                    "remove-export",
+                    "not allowed export name",
+                    "Name of an export that will be removed in the output file",
+                    []( const char* argument ) { s_not_allowed_exports.insert( argument ); } );
 
   parser.AddOption(
     "no-debug-names", "Ignore debug names in the binary file", []() { s_read_debug_names = false; } );
@@ -96,6 +103,11 @@ int ProgramMain( int argc, char** argv )
 
   InitStdio();
   ParseOptions( argc, argv );
+  
+  if ( s_allowed_exports.size() > 0 && s_not_allowed_exports.size() > 0 ) {
+    std::cerr << "Specifying -e and -r at the same time\n";
+    return 1;
+  }
 
   std::vector<uint8_t> file_data;
   result = ReadFile( s_infile.c_str(), &file_data );
@@ -117,13 +129,23 @@ int ProgramMain( int argc, char** argv )
         std::cerr << "found export \"" << ( *it )->name << "\" ";
 
         const auto& name = ( *it )->name;
-
-        if ( s_allowed_exports.count( name ) ) {
-          std::cerr << "\n";
-          ++it;
-        } else {
-          std::cerr << "(suppressing)\n";
-          it = module.exports.erase( it );
+        
+        if ( s_allowed_exports.size() > 0 ) {
+          if ( s_allowed_exports.count( name ) ) {
+            std::cerr << "\n";
+            ++it;
+          } else {
+            std::cerr << "(suppressing)\n";
+            it = module.exports.erase( it );
+          }
+        } else if ( s_not_allowed_exports.size() > 0 ) {
+          if ( s_not_allowed_exports.count( name ) ) {
+            std::cerr << "(suppressing)\n";
+            it = module.exports.erase( it );
+          } else {
+            std::cerr << "\n";
+            ++it;
+          }
         }
       }
 
