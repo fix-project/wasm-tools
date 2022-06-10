@@ -1,6 +1,5 @@
-cmake_minimum_required ( VERSION 2.8.5 )
-cmake_policy (SET CMP0048 NEW)
-project ( wasm-module-combiner )
+cmake_minimum_required ( VERSION 3.18 )
+project ( wasm-tools )
 
 include(FetchContent)
 set(FETCHCONTENT_QUIET OFF)
