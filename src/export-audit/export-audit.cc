@@ -152,6 +152,7 @@ int ProgramMain( int argc, char** argv )
       MemoryStream memory_stream;
       if ( Succeeded( result ) ) {
         // have to serialize to MemoryStream because FileStream::Truncate is not implemented
+        s_write_binary_options.features = s_features;
         result = WriteBinaryModule( &memory_stream, &module, s_write_binary_options );
       }
 
