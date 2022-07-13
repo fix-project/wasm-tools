@@ -5,8 +5,8 @@ include(FetchContent)
 set(FETCHCONTENT_QUIET OFF)
 FetchContent_Declare(
   wabt
-  GIT_REPOSITORY https://github.com/WebAssembly/wabt
-  GIT_TAG        main
+  GIT_REPOSITORY https://github.com/fixpointOS/wabt
+  GIT_TAG        fixpoint 
   )
 set(BUILD_TESTS off)
 set(BUILD_LIBWASM off)
