@@ -23,3 +23,6 @@ add_subdirectory ("${PROJECT_SOURCE_DIR}/src/access-checker")
 
 include_directories ("${PROJECT_SOURCE_DIR}/src/export-audit")
 add_subdirectory ("${PROJECT_SOURCE_DIR}/src/export-audit")
+
+include_directories ("${PROJECT_SOURCE_DIR}/src/import-check")
+add_subdirectory ("${PROJECT_SOURCE_DIR}/src/import-check")
