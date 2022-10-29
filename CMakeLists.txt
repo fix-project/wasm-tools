@@ -5,15 +5,16 @@ include(FetchContent)
 set(FETCHCONTENT_QUIET OFF)
 FetchContent_Declare(
   wabt
-  GIT_REPOSITORY https://github.com/fixpointOS/wabt
+  GIT_REPOSITORY https://github.com/fix-project/wabt
   GIT_TAG        fixpoint 
   )
 set(BUILD_TESTS off)
+set(BUILD_TOOLS off)
 set(BUILD_LIBWASM off)
 FetchContent_MakeAvailable(wabt)
 
-include_directories (SYSTEM "${CMAKE_BINARY_DIR}/_deps/wabt-src")
-include_directories (SYSTEM "${CMAKE_BINARY_DIR}/_deps/wabt-build")
+include_directories (SYSTEM "${CMAKE_BINARY_DIR}/_deps/wabt-src/include")
+include_directories (SYSTEM "${CMAKE_BINARY_DIR}/_deps/wabt-build/include")
 
 include_directories ("${PROJECT_SOURCE_DIR}/src/module-combiner")
 add_subdirectory ("${PROJECT_SOURCE_DIR}/src/module-combiner")
